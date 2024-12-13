@@ -5,7 +5,10 @@ const AddBookPage = () => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [isbn, setISBN] = useState("");
+  const [edition, setEdition] = useState("");
+  const [summary, setSummary] = useState("");
   const [isAvailable, setIsAvailable] = useState(false);
+  const [dueDate, setDueDate] = useState("");
   const [borrower, setBorrower] = useState("");
 
   const user = JSON.parse(localStorage.getItem("user"));
@@ -41,8 +44,11 @@ const AddBookPage = () => {
       title,
       author,
       isbn,
+      edition,
+      summary,
       availability: {
         isAvailable,
+        dueDate,
         borrower,
       },
     };
@@ -64,6 +70,7 @@ const AddBookPage = () => {
     <div className="create">
       <h2>Add a New Book</h2>
       <form onSubmit={submitForm}>
+
         <label>Book title:</label>
         <input
           type="text"
@@ -71,6 +78,7 @@ const AddBookPage = () => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
+
         <label>Author:</label>
         <input
           type="text"
@@ -78,6 +86,7 @@ const AddBookPage = () => {
           value={author}
           onChange={(e) => setAuthor(e.target.value)}
         />
+
         <label>ISBN:</label>
         <input
           type="text"
@@ -85,6 +94,23 @@ const AddBookPage = () => {
           value={isbn}
           onChange={(e) => setISBN(e.target.value)}
         />
+
+        <label>Edition:</label>
+        <input
+          type="text"
+          required
+          value={edition}
+          onChange={(e) => setEdition(e.target.value)}
+        />
+
+        <label>Summary:</label>
+        <input
+          type="text"
+          required
+          value={summary}
+          onChange={(e) => setSummary(e.target.value)}
+        />
+
         <label>Availability:</label>
         <select
           value={isAvailable ? "Yes" : "No"}
@@ -93,10 +119,17 @@ const AddBookPage = () => {
           <option value="Yes">Yes</option>
           <option value="No">No</option>
         </select>
-        <label>borrower:</label>
+
+        <label>Due Date:</label>
+        <input
+          type="date"
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+        />
+
+        <label>Borrower:</label>
         <input
           type="text"
-          required
           value={borrower}
           onChange={(e) => setBorrower(e.target.value)}
         />
