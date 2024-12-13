@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const Signup = ({ setIsAuthenticated }) => {
   const navigate = useNavigate();
-  const name = useField("text");  
+  const name = useField("text");
   const email = useField("email");
   const password = useField("password");
   const role = useField("text");
@@ -21,10 +21,16 @@ const Signup = ({ setIsAuthenticated }) => {
       role: role.value,
       bio: bio.value,
     });
+
     if (!error) {
-      console.log("success");
-      setIsAuthenticated(true);
-      navigate("/");
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user && user.token) {
+        console.log("Signup success", user);
+        setIsAuthenticated(true);
+        navigate("/");
+      }
+    } else {
+      console.log("Signup failed", error);
     }
   };
 

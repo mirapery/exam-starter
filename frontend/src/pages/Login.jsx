@@ -11,24 +11,32 @@ const Login = ({ setIsAuthenticated }) => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+
     await login({ email: email.value, password: password.value });
+
     if (!error) {
-      console.log("success");
-      setIsAuthenticated(true);
-      navigate("/");
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user && user.token) {
+        console.log("Login success", user);
+        setIsAuthenticated(true);
+        navigate("/");
+      }
+    } else {
+      console.log("Login failed", error);
     }
   };
-
 
   return (
     <div className="create">
       <h2>Login</h2>
       <form onSubmit={handleFormSubmit}>
-      <label>Email address:</label>
+        <label>Email address:</label>
         <input {...email} />
+
         <label>Password:</label>
         <input {...password} />
-        <button>Sign up</button>
+
+        <button type="submit">Login</button>
       </form>
     </div>
   );
