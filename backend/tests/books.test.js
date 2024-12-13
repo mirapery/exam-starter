@@ -10,17 +10,23 @@ const books = [
     "title": "Title 1",
     "author": "Author 1",
     "isbn": "978-3-16-148410-0",
+    "edition": "1st",
+    "summary": "Summary 1",
     "availability": {
       "isAvailable": true,
+      "dueDate": "2022-12-31",
       "borrower": "Borrower 1"
     }
   },
   {
-    "title": "Title 1",
+    "title": "Title 2",
     "author": "Author 2",
     "isbn": "978-1-4028-9462-6",
+    "edition": "2nd",
+    "summary": "Summary 2",
     "availability": {
       "isAvailable": false,
+      "dueDate": "2022-12-31",
       "borrower": "Borrower 2"
     }
   }
@@ -36,8 +42,8 @@ beforeAll(async () => {
         name: "John Doe",
         email: "john@example.com",
         password: "Pass!#22w0d@",
-        phone_number: "09-4567890",
-        gender: "Female",
+        role: "admin",
+        bio: "Lorem ipsum...",
       }
      );
   token = result.body.token;
@@ -66,8 +72,11 @@ describe("Given there are initially some books saved", () => {
   title: "test title",
   author: "test author",
   isbn: "test isbn",
+  edition: "test edition",
+  summary: "test summary",
   availability: {
     isAvailable: false,
+    dueDate: "2022-12-31",
     borrower: "test borrower",
   },
     };
@@ -90,13 +99,16 @@ describe("Given there are initially some books saved", () => {
   it("should update one book by ID when PUT /api/books/:id is called", async () => {
     const book = await Book.findOne();
     const updatedBook = {
-      title: "test title",
-  author: "test author",
-  isbn: "test isbn",
-  availability: {
-    isAvailable: false,
-    borrower: "test borrower",
-  },
+      title: "Updated test title",
+      author: "Updated test author",
+      isbn: "Updated test isbn",
+      edition: " Updated test edition",
+      summary: "Updated test summary",
+      availability: {
+        isAvailable: true,
+        dueDate: new Date("2023-12-31"),
+        borrower: "Updated borrower",
+      },
     };
     await api
       .put("/api/books/" + book._id)
@@ -104,7 +116,10 @@ describe("Given there are initially some books saved", () => {
       .send(updatedBook)
       .expect(200);
     const updatedBookCheck = await Book.findById(book._id);
-    expect(updatedBookCheck.toJSON()).toEqual(expect.objectContaining(updatedBook));
+    const updatedBookCheckObj = updatedBookCheck.toObject();
+    const { _id, __v, createdAt, updatedAt, id, user_id, ...updatedBookCheckWithoutDynamicFields } = updatedBookCheckObj;
+    //expect(updatedBookCheck.toJSON()).toEqual(expect.objectContaining(updatedBook));
+    expect(updatedBookCheckWithoutDynamicFields).toEqual(updatedBook);
   });
 
   it("should delete one book by ID when DELETE /api/books/:id is called", async () => {

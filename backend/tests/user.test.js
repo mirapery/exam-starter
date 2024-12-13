@@ -16,8 +16,8 @@ describe("User Routes", () => {
         name: "John Doe",
         email: "john@example.com",
         password: "Pass!#22w0d@",
-        phone_number: "09-4567890",
-        gender: "Male",
+        role: "admin",
+        bio: "Lorem ipsum...",
       };
 
       // Act
