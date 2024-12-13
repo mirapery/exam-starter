@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const validator = require("validator");
 
 // Generate JWT
 const generateToken = (_id) => {
@@ -13,20 +14,29 @@ const generateToken = (_id) => {
 // @route   POST /api/users/signup
 // @access  Public
 const signupUser = async (req, res) => {
-  const {
-    name,
-    email,
-    password,
-  } = req.body;
+  const { name, email, password } = req.body;
+
   try {
-    if (
-      !name ||
-      !email ||
-      !password
-    ) {
+    if (!name || !email || !password) {
       res.status(400);
       throw new Error("Please add all fields");
     }
+
+    const isStrongPassword = validator.isStrongPassword(password, {
+      minLength: 8,
+      minLowercase: 1,
+      minUppercase: 1,
+      minNumbers: 1,
+      minSymbols: 1,
+    });
+
+    if (!isStrongPassword) {
+      res.status(400);
+      throw new Error(
+        "Password must be at least 8 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 special character"
+      );
+    }
+
     // Check if user exists
     const userExists = await User.findOne({ email });
 
